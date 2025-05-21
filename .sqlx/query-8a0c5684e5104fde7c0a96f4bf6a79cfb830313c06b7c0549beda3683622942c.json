@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT balance, currency FROM accounts\n        WHERE user_id = $1\n        FOR UPDATE\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "balance",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 1,
+        "name": "currency",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "8a0c5684e5104fde7c0a96f4bf6a79cfb830313c06b7c0549beda3683622942c"
+}

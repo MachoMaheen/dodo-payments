@@ -1,0 +1,90 @@
+{
+  "db": "PostgreSQL",
+  "1a795da639de4fec5f6a73edd81659da44db0bd7550ddd29b98143fdf76f5dcc": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": ["Text", "Text", "Text", "Uuid"]
+      }
+    },
+    "query": "INSERT INTO users (username, email, password_hash, id) VALUES ($1, $2, $3, $4)"
+  },
+  "d07642c61770d0b64de8b9bee2d808dd5fb9936f01f839abcd2856819ec4fec9": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "username",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "email",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [false, false, false, false, false],
+      "parameters": {
+        "Left": ["Text"]
+      }
+    },
+    "query": "SELECT id, username, email, created_at, updated_at FROM users WHERE username = $1"
+  },
+  "9cb95647771fd3a192e85896e95256b05cbeb6a8e3304bedc4873035c798a8b7": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "balance",
+          "ordinal": 2,
+          "type_info": "Int8"
+        },
+        {
+          "name": "currency",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "created_at",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "updated_at",
+          "ordinal": 5,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [false, false, false, false, false, false],
+      "parameters": {
+        "Left": ["Uuid"]
+      }
+    },
+    "query": "SELECT id, user_id, balance, currency, created_at, updated_at FROM accounts WHERE user_id = $1"
+  }
+}

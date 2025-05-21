@@ -1,0 +1,21 @@
+/target
+ 
+# Environment variables
+.env
+.env.*
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker secrets
+jwt_secret.txt
+
+# macOS specific files
+.DS_Store
+
+# Database files
+*.db
+*.sqlite

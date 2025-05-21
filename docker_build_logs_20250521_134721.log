@@ -1,0 +1,455 @@
+Stopping existing containers...
+time="2025-05-21T13:47:21+05:30" level=warning msg="C:\\Users\\kabee\\Documents\\projects\\dodo-payments\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Cleaning Docker builder cache...
+Total:	0B
+Building Docker image...
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.46kB 0.0s done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 2)
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/debian:bullseye-slim
+#2 DONE 2.1s
+
+#3 [internal] load metadata for docker.io/library/rust:1.75
+#3 DONE 3.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 546B done
+#4 DONE 0.1s
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 resolve docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 ...
+
+#6 [internal] load build context
+#6 transferring context: 158.34kB 0.1s done
+#6 DONE 0.2s
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 resolve docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0 0.1s done
+#5 sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0 5.96kB / 5.96kB done
+#5 sha256:b7b25312e49dfbe6cab04c89d5a8ed5df2df971406a3b5c5ac43e247b5821b5f 1.88kB / 1.88kB done
+#5 sha256:764e13f0abe8075a127c262f32e42cd04f14f3452dcf3f6ccf6a6d31bb71ac37 3.94kB / 3.94kB done
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 0B / 49.58MB 0.2s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 0B / 64.14MB 0.2s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 0B / 24.05MB 0.2s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 3.15MB / 49.58MB 3.2s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 6.29MB / 49.58MB 3.8s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 2.10MB / 24.05MB 3.8s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 1.05MB / 64.14MB 5.3s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 9.44MB / 49.58MB 6.1s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 2.10MB / 24.05MB 9.0s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 12.55MB / 49.58MB 10.0s
+#5 ...
+
+#7 [stage-1 1/6] FROM docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d
+#7 resolve docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d 0.1s done
+#7 sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d 4.54kB / 4.54kB done
+#7 sha256:12ddb9ab52c324019d48d0a73cb694a40101bc97ded6cd262f49ddc4779f3bad 1.02kB / 1.02kB done
+#7 sha256:70c53fd29fab3bd5d1cd0d766de32bfe8d90985479a31ea5c42f1fbaf1e2bc2a 453B / 453B done
+#7 ...
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 2.10MB / 64.14MB 10.4s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 15.73MB / 49.58MB 13.0s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 3.15MB / 24.05MB 14.2s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 3.15MB / 64.14MB 15.6s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 18.87MB / 49.58MB 17.8s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 4.19MB / 24.05MB 19.4s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 22.02MB / 49.58MB 20.0s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 7.34MB / 64.14MB 20.6s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 5.61MB / 24.05MB 22.6s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 25.02MB / 49.58MB 23.6s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 7.34MB / 24.05MB 24.6s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 27.57MB / 49.58MB 25.5s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 10.49MB / 64.14MB 25.7s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 30.41MB / 49.58MB 27.2s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 9.44MB / 24.05MB 27.5s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 33.55MB / 49.58MB 28.5s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 14.68MB / 64.14MB 28.5s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 36.70MB / 49.58MB 29.3s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 11.53MB / 24.05MB 29.3s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 39.85MB / 49.58MB 30.0s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 18.87MB / 64.14MB 30.3s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 42.99MB / 49.58MB 30.7s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 13.63MB / 24.05MB 30.7s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 46.14MB / 49.58MB 31.2s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 49.58MB / 49.58MB 31.7s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 23.07MB / 64.14MB 31.7s
+#5 sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 49.58MB / 49.58MB 31.7s done
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 0B / 211.11MB 31.8s
+#5 extracting sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 15.73MB / 24.05MB 32.4s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 27.26MB / 64.14MB 32.8s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 31.46MB / 64.14MB 33.7s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 17.83MB / 24.05MB 33.7s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 34.84MB / 64.14MB 34.5s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 19.92MB / 24.05MB 34.8s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 38.80MB / 64.14MB 35.2s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 42.99MB / 64.14MB 36.6s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 22.02MB / 24.05MB 36.8s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 11.53MB / 211.11MB 36.8s
+#5 extracting sha256:6a299ae9cfd996c1149a699d36cdaa76fa332c8e9d66d6678fa9a231d9ead04c 5.0s done
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 47.19MB / 64.14MB 37.3s
+#5 sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 24.05MB / 24.05MB 37.4s done
+#5 extracting sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 0B / 177.28MB 37.6s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 51.38MB / 64.14MB 37.8s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 23.07MB / 211.11MB 38.3s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 55.57MB / 64.14MB 38.4s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 59.08MB / 64.14MB 38.8s
+#5 extracting sha256:e08e8703b2fb5e50153f792f3192087d26970d262806b397049d61b9a14b3af5 1.4s done
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 62.91MB / 64.14MB 39.3s
+#5 sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 64.14MB / 64.14MB 39.4s done
+#5 extracting sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 34.60MB / 211.11MB 39.7s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 46.14MB / 211.11MB 41.0s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 57.67MB / 211.11MB 42.3s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 7.34MB / 177.28MB 42.7s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 69.21MB / 211.11MB 43.7s
+#5 extracting sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 5.0s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 79.82MB / 211.11MB 45.0s
+#5 extracting sha256:68e92d11b04ec0fe48e60d59964704aca234084f87af5d1a068c49456b37fe3d 6.4s done
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 91.23MB / 211.11MB 46.6s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 15.73MB / 177.28MB 47.7s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 102.76MB / 211.11MB 48.2s
+#5 ...
+
+#7 [stage-1 1/6] FROM docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d
+#7 sha256:c8e1eb8ab3b017bd9e33ddec83ebdd8292c542bbd14a8d5a6cfa2edc3ad3b8eb 6.29MB / 30.25MB 49.4s
+#7 ...
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 114.29MB / 211.11MB 49.9s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 125.83MB / 211.11MB 51.3s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 25.17MB / 177.28MB 52.1s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 137.36MB / 211.11MB 52.5s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 148.90MB / 211.11MB 53.6s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 160.43MB / 211.11MB 54.8s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 171.97MB / 211.11MB 55.8s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 34.60MB / 177.28MB 56.1s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 184.55MB / 211.11MB 56.8s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 196.08MB / 211.11MB 57.8s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 44.04MB / 177.28MB 58.8s
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 208.67MB / 211.11MB 58.9s
+#5 ...
+
+#7 [stage-1 1/6] FROM docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d
+#7 sha256:c8e1eb8ab3b017bd9e33ddec83ebdd8292c542bbd14a8d5a6cfa2edc3ad3b8eb 23.07MB / 30.25MB 59.3s
+#7 ...
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 211.11MB / 211.11MB 60.1s done
+#5 extracting sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 53.48MB / 177.28MB 60.9s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 62.91MB / 177.28MB 62.5s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 72.35MB / 177.28MB 63.7s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 81.79MB / 177.28MB 64.9s
+#5 extracting sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 5.0s
+#5 ...
+
+#7 [stage-1 1/6] FROM docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d
+#7 sha256:c8e1eb8ab3b017bd9e33ddec83ebdd8292c542bbd14a8d5a6cfa2edc3ad3b8eb 30.25MB / 30.25MB 62.1s done
+#7 extracting sha256:c8e1eb8ab3b017bd9e33ddec83ebdd8292c542bbd14a8d5a6cfa2edc3ad3b8eb 3.1s done
+#7 DONE 65.9s
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 91.23MB / 177.28MB 65.8s
+#5 ...
+
+#8 [stage-1 2/6] WORKDIR /app
+#8 DONE 3.2s
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 126.88MB / 177.28MB 69.1s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 136.31MB / 177.28MB 69.7s
+#5 extracting sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 10.1s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 145.75MB / 177.28MB 70.7s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 155.19MB / 177.28MB 71.3s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 164.63MB / 177.28MB 72.3s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 175.11MB / 177.28MB 74.0s
+#5 sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 177.28MB / 177.28MB 74.4s done
+#5 extracting sha256:5b9fe7fef9befda786bc8e1dd1ae42ffd8b9c37a4cce3c433e65ebb890cb1672 14.7s done
+#5 extracting sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 0.1s
+#5 ...
+
+#9 [stage-1 3/6] RUN apt-get update &&     apt-get install -y libpq5 ca-certificates tzdata curl &&     rm -rf /var/lib/apt/lists/*
+#9 1.845 Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
+#9 2.248 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+#9 2.379 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.1 kB]
+#9 2.524 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+#9 4.389 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [369 kB]
+#9 4.414 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+#9 5.133 Fetched 8641 kB in 4s (2144 kB/s)
+#9 5.133 Reading package lists...
+#9 5.599 Reading package lists...
+#9 6.040 Building dependency tree...
+#9 6.183 Reading state information...
+#9 6.401 tzdata is already the newest version (2025b-0+deb11u1).
+#9 6.401 tzdata set to manually installed.
+#9 6.401 The following additional packages will be installed:
+#9 6.402   libbrotli1 libcurl4 libldap-2.4-2 libldap-common libnghttp2-14 libpsl5
+#9 6.402   librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db libssh2-1 openssl
+#9 6.403   publicsuffix
+#9 6.405 Suggested packages:
+#9 6.405   libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal
+#9 6.405   libsasl2-modules-ldap libsasl2-modules-otp libsasl2-modules-sql
+#9 6.478 The following NEW packages will be installed:
+#9 6.479   ca-certificates curl libbrotli1 libcurl4 libldap-2.4-2 libldap-common
+#9 6.479   libnghttp2-14 libpq5 libpsl5 librtmp1 libsasl2-2 libsasl2-modules
+#9 6.481   libsasl2-modules-db libssh2-1 openssl publicsuffix
+#9 6.701 0 upgraded, 16 newly installed, 0 to remove and 2 not upgraded.
+#9 6.701 Need to get 3185 kB of archives.
+#9 6.701 After this operation, 7082 kB of additional disk space will be used.
+#9 6.701 Get:1 http://deb.debian.org/debian-security bullseye-security/main amd64 openssl amd64 1.1.1w-0+deb11u2 [859 kB]
+#9 7.357 Get:2 http://deb.debian.org/debian bullseye/main amd64 ca-certificates all 20210119 [158 kB]
+#9 7.461 Get:3 http://deb.debian.org/debian bullseye/main amd64 libbrotli1 amd64 1.0.9-2+b2 [279 kB]
+#9 7.568 Get:4 http://deb.debian.org/debian bullseye/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg-2.1+deb11u1 [69.1 kB]
+#9 7.615 Get:5 http://deb.debian.org/debian bullseye/main amd64 libsasl2-2 amd64 2.1.27+dfsg-2.1+deb11u1 [106 kB]
+#9 7.663 Get:6 http://deb.debian.org/debian bullseye/main amd64 libldap-2.4-2 amd64 2.4.57+dfsg-3+deb11u1 [232 kB]
+#9 7.759 Get:7 http://deb.debian.org/debian-security bullseye-security/main amd64 libnghttp2-14 amd64 1.43.0-1+deb11u2 [77.0 kB]
+#9 7.780 Get:8 http://deb.debian.org/debian bullseye/main amd64 libpsl5 amd64 0.21.0-1.2 [57.3 kB]
+#9 7.810 Get:9 http://deb.debian.org/debian bullseye/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b2 [60.8 kB]
+#9 7.958 Get:10 http://deb.debian.org/debian bullseye/main amd64 libssh2-1 amd64 1.9.0-2+deb11u1 [156 kB]
+#9 8.077 Get:11 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl4 amd64 7.74.0-1.3+deb11u14 [348 kB]
+#9 8.288 Get:12 http://deb.debian.org/debian-security bullseye-security/main amd64 curl amd64 7.74.0-1.3+deb11u14 [272 kB]
+#9 8.470 Get:13 http://deb.debian.org/debian bullseye/main amd64 libldap-common all 2.4.57+dfsg-3+deb11u1 [95.8 kB]
+#9 8.591 Get:14 http://deb.debian.org/debian-security bullseye-security/main amd64 libpq5 amd64 13.21-0+deb11u1 [185 kB]
+#9 8.710 Get:15 http://deb.debian.org/debian bullseye/main amd64 libsasl2-modules amd64 2.1.27+dfsg-2.1+deb11u1 [104 kB]
+#9 8.843 Get:16 http://deb.debian.org/debian bullseye/main amd64 publicsuffix all 20220811.1734-0+deb11u1 [127 kB]
+#9 9.018 debconf: delaying package configuration, since apt-utils is not installed
+#9 9.052 Fetched 3185 kB in 2s (1350 kB/s)
+#9 9.179 Selecting previously unselected package openssl.
+#9 9.179 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6673 files and directories currently installed.)
+#9 9.186 Preparing to unpack .../00-openssl_1.1.1w-0+deb11u2_amd64.deb ...
+#9 9.236 Unpacking openssl (1.1.1w-0+deb11u2) ...
+#9 9.632 Selecting previously unselected package ca-certificates.
+#9 9.633 Preparing to unpack .../01-ca-certificates_20210119_all.deb ...
+#9 9.676 Unpacking ca-certificates (20210119) ...
+#9 10.09 Selecting previously unselected package libbrotli1:amd64.
+#9 10.09 Preparing to unpack .../02-libbrotli1_1.0.9-2+b2_amd64.deb ...
+#9 10.19 Unpacking libbrotli1:amd64 (1.0.9-2+b2) ...
+#9 ...
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 extracting sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 5.3s
+#5 extracting sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 10.3s
+#5 extracting sha256:a68b310aca5ae527cefc482426599a6bd39caade4d09d32f9553a47f653db9ee 13.4s done
+#5 ...
+
+#9 [stage-1 3/6] RUN apt-get update &&     apt-get install -y libpq5 ca-certificates tzdata curl &&     rm -rf /var/lib/apt/lists/*
+#9 10.43 Selecting previously unselected package libsasl2-modules-db:amd64.
+#9 10.43 Preparing to unpack .../03-libsasl2-modules-db_2.1.27+dfsg-2.1+deb11u1_amd64.deb ...
+#9 10.48 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 10.76 Selecting previously unselected package libsasl2-2:amd64.
+#9 10.76 Preparing to unpack .../04-libsasl2-2_2.1.27+dfsg-2.1+deb11u1_amd64.deb ...
+#9 10.79 Unpacking libsasl2-2:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 11.12 Selecting previously unselected package libldap-2.4-2:amd64.
+#9 11.12 Preparing to unpack .../05-libldap-2.4-2_2.4.57+dfsg-3+deb11u1_amd64.deb ...
+#9 11.17 Unpacking libldap-2.4-2:amd64 (2.4.57+dfsg-3+deb11u1) ...
+#9 11.49 Selecting previously unselected package libnghttp2-14:amd64.
+#9 11.49 Preparing to unpack .../06-libnghttp2-14_1.43.0-1+deb11u2_amd64.deb ...
+#9 11.54 Unpacking libnghttp2-14:amd64 (1.43.0-1+deb11u2) ...
+#9 11.86 Selecting previously unselected package libpsl5:amd64.
+#9 11.86 Preparing to unpack .../07-libpsl5_0.21.0-1.2_amd64.deb ...
+#9 11.90 Unpacking libpsl5:amd64 (0.21.0-1.2) ...
+#9 12.08 Selecting previously unselected package librtmp1:amd64.
+#9 12.08 Preparing to unpack .../08-librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb ...
+#9 12.12 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+#9 12.44 Selecting previously unselected package libssh2-1:amd64.
+#9 12.44 Preparing to unpack .../09-libssh2-1_1.9.0-2+deb11u1_amd64.deb ...
+#9 12.48 Unpacking libssh2-1:amd64 (1.9.0-2+deb11u1) ...
+#9 12.80 Selecting previously unselected package libcurl4:amd64.
+#9 12.80 Preparing to unpack .../10-libcurl4_7.74.0-1.3+deb11u14_amd64.deb ...
+#9 12.84 Unpacking libcurl4:amd64 (7.74.0-1.3+deb11u14) ...
+#9 13.10 Selecting previously unselected package curl.
+#9 13.10 Preparing to unpack .../11-curl_7.74.0-1.3+deb11u14_amd64.deb ...
+#9 13.15 Unpacking curl (7.74.0-1.3+deb11u14) ...
+#9 13.42 Selecting previously unselected package libldap-common.
+#9 13.42 Preparing to unpack .../12-libldap-common_2.4.57+dfsg-3+deb11u1_all.deb ...
+#9 13.47 Unpacking libldap-common (2.4.57+dfsg-3+deb11u1) ...
+#9 13.77 Selecting previously unselected package libpq5:amd64.
+#9 13.77 Preparing to unpack .../13-libpq5_13.21-0+deb11u1_amd64.deb ...
+#9 13.82 Unpacking libpq5:amd64 (13.21-0+deb11u1) ...
+#9 14.11 Selecting previously unselected package libsasl2-modules:amd64.
+#9 14.11 Preparing to unpack .../14-libsasl2-modules_2.1.27+dfsg-2.1+deb11u1_amd64.deb ...
+#9 14.15 Unpacking libsasl2-modules:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 14.40 Selecting previously unselected package publicsuffix.
+#9 14.40 Preparing to unpack .../15-publicsuffix_20220811.1734-0+deb11u1_all.deb ...
+#9 14.45 Unpacking publicsuffix (20220811.1734-0+deb11u1) ...
+#9 14.73 Setting up libpsl5:amd64 (0.21.0-1.2) ...
+#9 14.86 Setting up libbrotli1:amd64 (1.0.9-2+b2) ...
+#9 15.01 Setting up libsasl2-modules:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 15.18 Setting up libnghttp2-14:amd64 (1.43.0-1+deb11u2) ...
+#9 15.31 Setting up libldap-common (2.4.57+dfsg-3+deb11u1) ...
+#9 15.50 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 15.65 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+#9 15.78 Setting up libsasl2-2:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+#9 15.92 Setting up libssh2-1:amd64 (1.9.0-2+deb11u1) ...
+#9 16.07 Setting up openssl (1.1.1w-0+deb11u2) ...
+#9 16.25 Setting up publicsuffix (20220811.1734-0+deb11u1) ...
+#9 16.40 Setting up libldap-2.4-2:amd64 (2.4.57+dfsg-3+deb11u1) ...
+#9 16.54 Setting up ca-certificates (20210119) ...
+#9 16.68 debconf: unable to initialize frontend: Dialog
+#9 16.68 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#9 16.68 debconf: falling back to frontend: Readline
+#9 16.68 debconf: unable to initialize frontend: Readline
+#9 16.68 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.32.1 /usr/local/share/perl/5.32.1 /usr/lib/x86_64-linux-gnu/perl5/5.32 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.32 /usr/share/perl/5.32 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#9 16.68 debconf: falling back to frontend: Teletype
+#9 17.04 Updating certificates in /etc/ssl/certs...
+#9 17.55 129 added, 0 removed; done.
+#9 17.77 Setting up libcurl4:amd64 (7.74.0-1.3+deb11u14) ...
+#9 17.90 Setting up curl (7.74.0-1.3+deb11u14) ...
+#9 18.03 Setting up libpq5:amd64 (13.21-0+deb11u1) ...
+#9 18.16 Processing triggers for libc-bin (2.31-13+deb11u11) ...
+#9 18.30 Processing triggers for ca-certificates (20210119) ...
+#9 18.35 Updating certificates in /etc/ssl/certs...
+#9 18.72 0 added, 0 removed; done.
+#9 18.72 Running hooks in /etc/ca-certificates/update.d...
+#9 18.72 done.
+#9 DONE 21.0s
+
+#5 [builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 DONE 90.2s
+
+#10 [builder  2/11] WORKDIR /app
+#10 DONE 0.1s
+
+#11 [builder  3/11] RUN apt-get update && apt-get install -y libpq-dev
+#11 0.715 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#11 1.060 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#11 1.204 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+#11 1.346 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+#11 2.358 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [512 B]
+#11 2.490 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [259 kB]
+#11 3.170 Fetched 9307 kB in 3s (3349 kB/s)
+#11 3.170 Reading package lists...
+#11 3.651 Reading package lists...
+#11 4.141 Building dependency tree...
+#11 4.315 Reading state information...
+#11 4.577 The following additional packages will be installed:
+#11 4.578   libpq5
+#11 4.580 Suggested packages:
+#11 4.580   postgresql-doc-15
+#11 4.611 The following packages will be upgraded:
+#11 4.612   libpq-dev libpq5
+#11 4.835 2 upgraded, 0 newly installed, 0 to remove and 135 not upgraded.
+#11 4.835 Need to get 339 kB of archives.
+#11 4.835 After this operation, 12.3 kB of additional disk space will be used.
+#11 4.835 Get:1 http://deb.debian.org/debian bookworm/main amd64 libpq-dev amd64 15.13-0+deb12u1 [147 kB]
+#11 5.136 Get:2 http://deb.debian.org/debian bookworm/main amd64 libpq5 amd64 15.13-0+deb12u1 [192 kB]
+#11 5.389 debconf: delaying package configuration, since apt-utils is not installed
+#11 5.430 Fetched 339 kB in 1s (543 kB/s)
+#11 5.464 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 23259 files and directories currently installed.)
+#11 5.480 Preparing to unpack .../libpq-dev_15.13-0+deb12u1_amd64.deb ...
+#11 5.514 Unpacking libpq-dev (15.13-0+deb12u1) over (15.5-0+deb12u1) ...
+#11 5.759 Preparing to unpack .../libpq5_15.13-0+deb12u1_amd64.deb ...
+#11 5.809 Unpacking libpq5:amd64 (15.13-0+deb12u1) over (15.5-0+deb12u1) ...
+#11 6.024 Setting up libpq5:amd64 (15.13-0+deb12u1) ...
+#11 6.056 Setting up libpq-dev (15.13-0+deb12u1) ...
+#11 6.089 Processing triggers for libc-bin (2.36-9+deb12u4) ...
+#11 DONE 6.2s
+
+#12 [builder  4/11] COPY sqlx-data.json ./sqlx-data.json
+#12 DONE 0.1s
+
+#13 [builder  5/11] COPY Cargo.toml Cargo.lock ./
+#13 DONE 0.1s
+
+#14 [builder  6/11] RUN mkdir -p src &&     echo "fn main() { println!("Dummy build"); }" > src/main.rs &&     echo "pub fn dummy() {}" > src/lib.rs
+#14 DONE 0.4s
+
+#15 [builder  7/11] RUN cargo build --release
+#15 0.545 error: failed to parse lock file at: /app/Cargo.lock
+#15 0.545 
+#15 0.545 Caused by:
+#15 0.545   lock file version `4` was found, but this version of Cargo does not understand this lock file, perhaps Cargo needs to be updated?
+#15 ERROR: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101
+------
+ > [builder  7/11] RUN cargo build --release:
+0.545 error: failed to parse lock file at: /app/Cargo.lock
+0.545 
+0.545 Caused by:
+0.545   lock file version `4` was found, but this version of Cargo does not understand this lock file, perhaps Cargo needs to be updated?
+------
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 2)
+Dockerfile:22
+--------------------
+  20 |     # Build dependencies only - using offline mode
+  21 |     ENV SQLX_OFFLINE=true
+  22 | >>> RUN cargo build --release
+  23 |     
+  24 |     # Remove dummy source files
+--------------------
+ERROR: failed to solve: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101
+Starting services...
+time="2025-05-21T13:49:04+05:30" level=warning msg="C:\\Users\\kabee\\Documents\\projects\\dodo-payments\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [app internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.46kB done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 2)
+#1 DONE 0.0s
+
+#2 [app internal] load metadata for docker.io/library/rust:1.75
+#2 DONE 1.2s
+
+#3 [app internal] load metadata for docker.io/library/debian:bullseye-slim
+#3 DONE 1.2s
+
+#4 [app internal] load .dockerignore
+#4 transferring context: 546B done
+#4 DONE 0.0s
+
+#5 [app builder  1/11] FROM docker.io/library/rust:1.75@sha256:87f3b2f93b82995443a1a558c234212dafe79cfdc3af956539610560369ddcd0
+#5 DONE 0.0s
+
+#6 [app stage-1 1/6] FROM docker.io/library/debian:bullseye-slim@sha256:fdd75562fdcde1039c2480a1ea1cd2cf03b18b6e4cb551cabb03bde66ade8a5d
+#6 DONE 0.0s
+
+#7 [app stage-1 2/6] WORKDIR /app
+#7 CACHED
+
+#8 [app stage-1 3/6] RUN apt-get update &&     apt-get install -y libpq5 ca-certificates tzdata curl &&     rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [app internal] load build context
+#9 transferring context: 1.45kB done
+#9 DONE 0.0s
+
+#10 [app builder  2/11] WORKDIR /app
+#10 CACHED
+
+#11 [app builder  3/11] RUN apt-get update && apt-get install -y libpq-dev
+#11 CACHED
+
+#12 [app builder  4/11] COPY sqlx-data.json ./sqlx-data.json
+#12 CACHED
+
+#13 [app builder  5/11] COPY Cargo.toml Cargo.lock ./
+#13 CACHED
+
+#14 [app builder  6/11] RUN mkdir -p src &&     echo "fn main() { println!("Dummy build"); }" > src/main.rs &&     echo "pub fn dummy() {}" > src/lib.rs
+#14 CACHED
+
+#15 [app builder  7/11] RUN cargo build --release
+#15 0.397 error: failed to parse lock file at: /app/Cargo.lock
+#15 0.397 
+#15 0.397 Caused by:
+#15 0.397   lock file version `4` was found, but this version of Cargo does not understand this lock file, perhaps Cargo needs to be updated?
+#15 ERROR: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101
+------
+ > [app builder  7/11] RUN cargo build --release:
+0.397 error: failed to parse lock file at: /app/Cargo.lock
+0.397 
+0.397 Caused by:
+0.397   lock file version `4` was found, but this version of Cargo does not understand this lock file, perhaps Cargo needs to be updated?
+------
+failed to solve: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101
+Getting container logs...
+time="2025-05-21T13:49:06+05:30" level=warning msg="C:\\Users\\kabee\\Documents\\projects\\dodo-payments\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
