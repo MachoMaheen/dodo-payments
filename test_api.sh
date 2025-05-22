@@ -1,114 +1,128 @@
 #!/bin/bash
-# Script to test the Dodo Payments API
 
 set -e
 
-echo "=== API Testing Script for Dodo Payments ==="
+# === Parse CLI flags ===
+HEADLESS=false
+for arg in "$@"; do
+  if [ "$arg" == "--headless" ]; then
+    HEADLESS=true
+  fi
+done
 
-# Ensure the application is running
-if ! curl -s http://localhost:8080/api/health > /dev/null; then
-    echo "The application does not seem to be running. Start it with ./run.sh"
-    exit 1
+# === Log Setup ===
+timestamp=$(date +"%Y%m%d_%H%M%S")
+LOG_FILE="api_test_${timestamp}.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+exec 3>&1
+
+# === Colors ===
+if [ "$HEADLESS" = false ]; then
+  GREEN='\033[0;32m'
+  RED='\033[0;31m'
+  BLUE='\033[0;34m'
+  NC='\033[0m'
+else
+  GREEN='' RED='' BLUE='' NC=''
 fi
 
-# Colors for output
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+echo "=== API Testing Script for Dodo Payments ==="
+echo "Log file: $LOG_FILE"
+[ "$HEADLESS" = true ] && echo "Running in HEADLESS mode"
 
-# Function to make API requests and display results
-function make_request() {
-    local method=$1
-    local endpoint=$2
-    local data=$3
-    local auth_header=$4
-    
-    echo -e "${BLUE}Making ${method} request to ${endpoint}${NC}"
-    
-    local headers="-H \"Content-Type: application/json\""
-    if [ ! -z "$auth_header" ]; then
-        headers="$headers -H \"Authorization: Bearer $auth_header\""
-    fi
-    
-    local cmd="curl -s -X $method http://localhost:8080$endpoint $headers"
-    if [ ! -z "$data" ]; then
-        cmd="$cmd -d '$data'"
-    fi
-    
-    # Execute command
-    local response=$(eval $cmd)
-    
-    # Check if response is valid JSON
-    if echo "$response" | jq . > /dev/null 2>&1; then
-        echo -e "${GREEN}Response:${NC}"
-        echo "$response" | jq .
-    else
-        echo -e "${RED}Response:${NC}"
-        echo "$response"
-    fi
-    
-    echo ""
-    
-    # Return response for potential processing
+# === Config ===
+API_URL="http://localhost:8082"
+UNAME="testuser_$(date +%s)"
+EMAIL="${UNAME}@example.com"
+PASS="password123"
+RECIPIENT="recipient_$(date +%s)"
+
+# === Utility ===
+make_request() {
+  local method=$1
+  local endpoint=$2
+  local data=$3
+  local auth_token=$4
+
+  echo -e "${BLUE}Request: ${method} ${endpoint}${NC}"
+  local curl_args=(-s -X "$method" "${API_URL}${endpoint}" -H "Content-Type: application/json")
+  [ -n "$auth_token" ] && curl_args+=(-H "Authorization: Bearer $auth_token")
+  [ -n "$data" ] && curl_args+=(-d "$data")
+
+  local response
+  response=$(curl "${curl_args[@]}")
+  local status=$?
+
+  if [ $status -ne 0 ]; then
+    echo -e "${RED}Curl failed with status $status${NC}"
+    exit 1
+  fi
+
+  if echo "$response" | jq . > /dev/null 2>&1; then
+    echo -e "${GREEN}Response:${NC}"
+    echo "$response" | jq .
+  else
+    echo -e "${RED}Invalid JSON:${NC}"
     echo "$response"
+  fi
+
+  echo ""
+  echo "$response" >&3
 }
 
-# Register a test user
-echo -e "${BLUE}1. Registering a test user...${NC}"
-register_response=$(make_request "POST" "/api/users/register" '{
-    "username": "testuser",
-    "email": "test@example.com",
-    "password": "password123"
-}')
+# === Start ===
 
-# Login to get JWT token
-echo -e "${BLUE}2. Logging in to get JWT token...${NC}"
-login_response=$(make_request "POST" "/api/users/login" '{
-    "username": "testuser",
-    "password": "password123"
-}')
-
-# Extract token from response
-token=$(echo $login_response | jq -r '.token')
-
-if [ "$token" == "null" ] || [ -z "$token" ]; then
-    echo -e "${RED}Failed to get token. Aborting further tests.${NC}"
-    exit 1
+echo -e "${BLUE}Checking API health...${NC}"
+if ! curl -s "${API_URL}/health" > /dev/null; then
+  echo -e "${RED}API not reachable. Start backend.${NC}"
+  exit 1
 fi
+echo -e "${GREEN}API is healthy.${NC}"
 
-echo -e "${GREEN}Successfully obtained JWT token: ${token:0:15}...${NC}"
+# Register user
+register_data="{\"username\":\"$UNAME\",\"email\":\"$EMAIL\",\"password\":\"$PASS\"}"
+make_request "POST" "/api/users/register" "$register_data" 3>&1 1>&2
 
-# Get user profile
-echo -e "${BLUE}3. Getting user profile...${NC}"
-make_request "GET" "/api/users/profile" "" "$token"
+# Login user
+login_data="{\"username\":\"$UNAME\",\"password\":\"$PASS\"}"
+login_response=$(make_request "POST" "/api/users/login" "$login_data" 3>&1 1>&2)
+token=$(echo "$login_response" | jq -r '.token')
 
-# Get account balance
-echo -e "${BLUE}4. Getting account balance...${NC}"
-make_request "GET" "/api/accounts/balance" "" "$token"
+if [ -z "$token" ] || [ "$token" = "null" ]; then
+  echo -e "${RED}Token extraction failed${NC}"
+  exit 1
+fi
+echo -e "${GREEN}Token: ${token:0:16}...${NC}"
 
-# Register a second user (recipient)
-echo -e "${BLUE}5. Registering a recipient user...${NC}"
-make_request "POST" "/api/users/register" '{
-    "username": "recipient",
-    "email": "recipient@example.com",
-    "password": "password123"
-}'
+# Profile and balance
+make_request "GET" "/api/users/profile" "" "$token" 3>&1 1>&2
+make_request "GET" "/api/accounts/balance" "" "$token" 3>&1 1>&2
 
-# Create a transaction
-echo -e "${BLUE}6. Creating a transaction...${NC}"
-make_request "POST" "/api/transactions" '{
-    "recipient_username": "recipient",
-    "amount": "10.00",
-    "description": "Test payment"
-}' "$token"
+# Register recipient
+recipient_data="{\"username\":\"$RECIPIENT\",\"email\":\"${RECIPIENT}@example.com\",\"password\":\"password123\"}"
+make_request "POST" "/api/users/register" "$recipient_data" 3>&1 1>&2
 
-# Get list of transactions
-echo -e "${BLUE}7. Getting list of transactions...${NC}"
-make_request "GET" "/api/transactions" "" "$token"
+# Login recipient + extract ID
+recipient_login_data="{\"username\":\"$RECIPIENT\",\"password\":\"password123\"}"
+recipient_login=$(make_request "POST" "/api/users/login" "$recipient_login_data" 3>&1 1>&2)
+recipient_token=$(echo "$recipient_login" | jq -r '.token')
+recipient_profile=$(make_request "GET" "/api/users/profile" "" "$recipient_token" 3>&1 1>&2)
+recipient_id=$(echo "$recipient_profile" | jq -r '.id // empty')
 
-# Test invalid token
-echo -e "${BLUE}8. Testing authentication with invalid token...${NC}"
-make_request "GET" "/api/users/profile" "" "invalid.token.here"
+[ -z "$recipient_id" ] && echo -e "${RED}No recipient ID${NC}" && exit 1
 
-echo -e "${GREEN}API testing completed!${NC}"
+# Create transaction
+transaction_data="{\"recipient_id\":\"$recipient_id\",\"amount\":10.00,\"currency\":\"USD\",\"description\":\"Test payment\"}"
+
+transaction_response=$(make_request "POST" "/api/transactions" "$transaction_data" "$token" 3>&1 1>&2)
+transaction_id=$(echo "$transaction_response" | jq -r '.id // empty')
+
+# Retrieve transaction
+[ -n "$transaction_id" ] && make_request "GET" "/api/transactions/$transaction_id" "" "$token" 3>&1 1>&2
+make_request "GET" "/api/transactions" "" "$token" 3>&1 1>&2
+
+# Invalid token test
+make_request "GET" "/api/users/profile" "" "invalid.token.here" 3>&1 1>&2
+
+exec 3>&-
+echo -e "${GREEN}Test completed. Log saved to: ${LOG_FILE}${NC}"

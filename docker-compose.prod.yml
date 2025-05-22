@@ -1,0 +1,71 @@
+version: "3.8"
+
+# Production configuration for Dodo Payments
+# Uses named volumes for data persistence and sets up a network
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD:-password}@db:5432/dodo_payments
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    command: ["./wait-for-db.sh", "db", "5432", "/app/dodo-payments"]
+    networks:
+      - dodo-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "./health-check.sh", "localhost", "8080", "3"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  db:
+    image: postgres:15
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    networks:
+      - dodo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+volumes:
+  postgres_data:
+    name: dodo_payments_postgres_data
+
+networks:
+  dodo-network:
+    driver: bridge

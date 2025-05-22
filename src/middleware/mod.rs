@@ -1,4 +1,7 @@
 pub mod auth;
+pub mod auth_fixed;
 
-// No re-exports to avoid unused import warnings
-// Other modules should import directly from auth module as needed
+// Use the fixed auth middleware by default
+pub use auth_fixed::Auth;
+
+// Other modules should import Auth directly from middleware module

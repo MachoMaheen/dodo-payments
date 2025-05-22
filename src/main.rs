@@ -44,8 +44,7 @@ async fn main() -> Result<()> {
     // Create data that will be shared across requests
     let pool_data = web::Data::new(pool);
     let jwt_secret_data = web::Data::new(jwt_secret);
-    
-    // Run the server
+      // Run the server
     HttpServer::new(move || {
         // Set up CORS
         let cors = Cors::default()
@@ -54,12 +53,13 @@ async fn main() -> Result<()> {
             .allow_any_header()
             .max_age(3600);
         
-        App::new()
-            .wrap(cors)
-            .wrap(actix_middleware::Logger::default())
-            .app_data(pool_data.clone())
-            .app_data(jwt_secret_data.clone())
-            .configure(dodo_payments::handlers::config_routes)
+       App::new()
+    .wrap(cors)
+    .wrap(actix_middleware::Logger::default())
+    .app_data(pool_data.clone())
+    .app_data(jwt_secret_data.clone())
+    .configure(dodo_payments::handlers::config_routes)
+
     })
     .bind(server_addr)?
     .run()
