@@ -51,6 +51,36 @@ make_request() {
     fi
 }
 
+# Function for testing rate limits - shows headers
+make_request_with_headers() {
+    local method=$1
+    local endpoint=$2
+    local data=$3
+    local auth_header=$4
+
+    if [ -n "$data" ]; then
+        if [ -n "$auth_header" ]; then
+            curl -v -X "$method" "${API_URL}${endpoint}" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: $auth_header" \
+                --data-raw "$data" 2>&1
+        else
+            curl -v -X "$method" "${API_URL}${endpoint}" \
+                -H "Content-Type: application/json" \
+                --data-raw "$data" 2>&1
+        fi
+    else
+        if [ -n "$auth_header" ]; then
+            curl -v -X "$method" "${API_URL}${endpoint}" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: $auth_header" 2>&1
+        else
+            curl -v -X "$method" "${API_URL}${endpoint}" \
+                -H "Content-Type: application/json" 2>&1
+        fi
+    fi
+}
+
 # Step 1: Health check
 echo -e "${BLUE}Step 1: Testing health endpoint${NC}"
 health_response=$(make_request "GET" "/health" "" "")
@@ -152,3 +182,68 @@ fi
 
 echo ""
 echo -e "${GREEN}🎉 API testing completed!${NC}"
+
+# Add sections for testing rate limiting and invalid tokens
+echo ""
+echo -e "${BLUE}=== Additional Security Tests ===${NC}"
+
+# Test invalid token
+echo -e "${BLUE}Testing Invalid Token Handling${NC}"
+echo -e "${YELLOW}Attempt to access profile with invalid token:${NC}"
+invalid_token="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkludmFsaWQgVG9rZW4iLCJpYXQiOjE1MTYyMzkwMjJ9.invalid_signature"
+invalid_token_response=$(make_request "GET" "/api/users/profile" "" "$invalid_token")
+echo "$invalid_token_response" | jq .
+
+echo -e "${YELLOW}Attempt to access balance with invalid token:${NC}"
+invalid_balance_response=$(make_request "GET" "/api/accounts/balance" "" "$invalid_token")
+echo "$invalid_balance_response" | jq .
+
+echo -e "${YELLOW}Attempt to access transactions with invalid token:${NC}"
+invalid_transactions_response=$(make_request "GET" "/api/transactions" "" "$invalid_token")
+echo "$invalid_transactions_response" | jq .
+
+# Test expired token (simulation - we're using an old or malformed token)
+echo -e "${BLUE}Testing Expired Token Handling${NC}"
+expired_token="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZTJiY2U3ZjctNTgwMS00YmVlLWE4MTktYjRjNTQzYzYzMjUwIiwiZXhwIjoxNjIwMDAwMDAwfQ.G8qrPVZlDT0HVi8IHg33bKVd2De1HLSf9MCyg-wopLI"
+echo -e "${YELLOW}Attempt to access profile with expired token:${NC}"
+expired_token_response=$(make_request "GET" "/api/users/profile" "" "$expired_token")
+echo "$expired_token_response" | jq .
+
+# Test rate limiting
+echo -e "${BLUE}Testing Rate Limiting${NC}"
+echo -e "${YELLOW}Making multiple requests to test rate limiting on login endpoint:${NC}"
+
+# Show rate limit headers for first request
+echo -e "${YELLOW}First request with rate limit headers:${NC}"
+rate_limit_headers=$(make_request_with_headers "POST" "/api/users/login" "$login_data" "")
+echo "$rate_limit_headers" | grep -i "ratelimit"
+
+# Make multiple requests to trigger rate limiting
+echo -e "${YELLOW}Making 5 rapid requests to test rate limiting:${NC}"
+for i in {1..5}; do
+    echo -e "${YELLOW}Request $i:${NC}"
+    quick_response=$(make_request "POST" "/api/users/login" "$login_data" "")
+    echo "$quick_response" | jq .
+    sleep 0.2
+done
+
+# Try to hit the rate limit (this might take a while, so we'll limit to 10 more requests)
+echo -e "${YELLOW}Attempting to reach rate limit (10 more rapid requests):${NC}"
+for i in {1..10}; do
+    echo -e "${YELLOW}Rapid request $i:${NC}"
+    limit_response=$(make_request "POST" "/api/users/login" "$login_data" "")
+    if echo "$limit_response" | grep -q "Too Many Requests"; then
+        echo -e "${GREEN}✅ Rate limiting successfully triggered!${NC}"
+        break
+    fi
+    echo "$limit_response" | jq .
+    sleep 0.1
+done
+
+# Final check with headers to see rate limit status
+echo -e "${YELLOW}Checking rate limit headers after multiple requests:${NC}"
+final_headers=$(make_request_with_headers "POST" "/api/users/login" "$login_data" "")
+echo "$final_headers" | grep -i "ratelimit"
+
+echo ""
+echo -e "${GREEN}🎉 All tests completed!${NC}"
