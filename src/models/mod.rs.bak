@@ -1,0 +1,11 @@
+pub mod user;
+pub mod transaction;
+pub mod transaction_fixed;
+pub mod account;
+pub mod error;
+
+// Re-exports - explicit to avoid ambiguity
+pub use user::{User, UserResponse, LoginUserRequest, RegisterUserRequest, TokenResponse};
+pub use transaction_fixed::{Transaction, TransactionResponse, TransactionListResponse, TransactionStatus, CreateTransactionRequest};
+pub use account::{Account, AccountBalanceResponse};
+pub use error::*;

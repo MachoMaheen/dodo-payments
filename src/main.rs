@@ -1,45 +1,49 @@
 use std::env;
+use std::io::Result;
+use std::fs;
 
 use actix_cors::Cors;
-use actix_web::{middleware, web, App, HttpServer};
+use actix_web::{middleware as actix_middleware, web, App, HttpServer};
 use dotenv::dotenv;
 use log::info;
 use sqlx::postgres::PgPoolOptions;
 
-mod config;
-mod handlers;
-mod middleware;
-mod models;
-mod utils;
-
-// Enable SQLx offline mode if needed
-#[cfg(feature = "sqlx-macros")]
-use crate::config::sqlx_config;
-
-use crate::config::setup_database_pool;
-
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> Result<()> {
     // Load environment variables from .env file
     dotenv().ok();
-    
-    // Enable SQLx offline mode if the feature is enabled
-    #[cfg(feature = "sqlx-macros")]
-    sqlx_config::enable_sqlx_offline();
     
     // Initialize logger
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     
-    // Get configuration from environment
-    let config = config::Config::from_env();
+    // Get server address from environment or use default
+    let server_addr = env::var("SERVER_ADDR").unwrap_or_else(|_| "127.0.0.1:8080".to_string());
+    info!("Starting server on {}", server_addr);
     
-    info!("Starting server on {}", config.server_addr);
+    // Get database URL from environment or use default
+    let database_url = env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "postgres://postgres:password@localhost:5432/dodo_payments".to_string());
     
     // Create database connection pool
-    let pool = setup_database_pool(&config.database_url).await;
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect_lazy(&database_url)
+        .expect("Failed to create database connection pool");
     
-    // Create JWT secret as app data
-    let jwt_secret = web::Data::new(config.jwt_secret);
+    // Read JWT secret from file or environment variable
+    let jwt_secret = env::var("JWT_SECRET").ok().unwrap_or_else(|| {
+        fs::read_to_string("jwt_secret.txt")
+            .unwrap_or_else(|_| {
+                info!("JWT secret not found, using default value");
+                "dodo_payments_default_secret".to_string()
+            })
+    });
+    
+    info!("JWT secret loaded (length: {})", jwt_secret.len());
+    
+    // Create data that will be shared across requests
+    let pool_data = web::Data::new(pool);
+    let jwt_secret_data = web::Data::new(jwt_secret);
     
     // Run the server
     HttpServer::new(move || {
@@ -51,16 +55,13 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600);
         
         App::new()
-            // Add middleware
-            .wrap(middleware::Logger::default())
             .wrap(cors)
-            // Add app data
-            .app_data(web::Data::new(pool.clone()))
-            .app_data(jwt_secret.clone())
-            // Configure routes
-            .configure(handlers::config_routes)
+            .wrap(actix_middleware::Logger::default())
+            .app_data(pool_data.clone())
+            .app_data(jwt_secret_data.clone())
+            .configure(dodo_payments::handlers::config_routes)
     })
-    .bind(config.server_addr)?
+    .bind(server_addr)?
     .run()
     .await
 }

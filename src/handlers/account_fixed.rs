@@ -2,7 +2,6 @@ use actix_web::{web, HttpResponse, Responder};
 use sqlx::PgPool;
 use sqlx::Row; // Explicitly import Row trait
 use uuid::Uuid;
-use bigdecimal::BigDecimal;
 
 use crate::models::{Account, AccountBalanceResponse, AppError};
 

@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
 
 services:
   app:
@@ -13,32 +13,23 @@ services:
       - RUST_LOG=info
       - SQLX_OFFLINE=true
     depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-    volumes:
-      - ./migrations:/app/migrations
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+      - db
+    restart: on-failure
 
   db:
-    image: postgres:13
-    ports:
-      - "5432:5432"
+    image: postgres:15
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=dodo_payments
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
 

@@ -7,7 +7,7 @@ pub async fn init_database(pool: &PgPool) -> Result<(), sqlx::Error> {
 
     // This is just a simple check to verify connection
     // Actual schema will be managed through migrations
-    let row: (i64,) = sqlx::query_as("SELECT 1")
+    let _: (i64,) = sqlx::query_as("SELECT 1")
         .fetch_one(pool)
         .await?;
 

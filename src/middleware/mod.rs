@@ -1,4 +1,4 @@
 pub mod auth;
 
-// Re-exports
-pub use auth::Auth;
+// No re-exports to avoid unused import warnings
+// Other modules should import directly from auth module as needed

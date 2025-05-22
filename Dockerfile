@@ -1,61 +1,42 @@
-# Dockerfile for Dodo Payments backend that uses SQLx compile-time macros
-FROM rust:1.75 as builder
+# Simple Dockerfile for Dodo Payments
+FROM rust:slim as builder
 
 WORKDIR /app
 
-# Install required dependencies
-RUN apt-get update && apt-get install -y libpq-dev
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y postgresql-client libpq-dev pkg-config libssl-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy SQLx data file for offline mode
-COPY sqlx-data.json ./sqlx-data.json
+# Copy the entire project
+COPY . .
 
-# Copy Cargo configuration files
-COPY Cargo.toml Cargo.lock ./
+# Create jwt_secret.txt if not exists
+RUN if [ ! -f jwt_secret.txt ]; then echo "dodo_payments_jwt_secret_key" > jwt_secret.txt; fi
 
-# Create dummy source layout for dependency caching
-RUN mkdir -p src && \
-    echo "fn main() { println!(\"Dummy build\"); }" > src/main.rs && \
-    echo "pub fn dummy() {}" > src/lib.rs
-
-# Build dependencies only - using offline mode
-ENV SQLX_OFFLINE=true
+# Build the application in release mode
 RUN cargo build --release
 
-# Remove dummy source files
-RUN rm -rf src
-
-# Copy actual source code
-COPY src ./src/
-COPY migrations ./migrations/
-
-# Build the actual application with SQLx offline mode
-RUN cargo build --release
-
-# Create runtime image
+# Runtime stage
 FROM debian:bullseye-slim
 
 WORKDIR /app
 
 # Install runtime dependencies
 RUN apt-get update && \
-    apt-get install -y libpq5 ca-certificates tzdata curl && \
+    apt-get install -y ca-certificates libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy binary from builder
+# Copy the binary and needed files
 COPY --from=builder /app/target/release/dodo-payments /app/dodo-payments
-
-# Copy migrations
-COPY migrations /app/migrations
-
-# Copy SQLx data file
-COPY sqlx-data.json ./sqlx-data.json
+COPY --from=builder /app/migrations /app/migrations/
+COPY --from=builder /app/jwt_secret.txt /app/jwt_secret.txt
 
 # Set environment variables
-ENV SERVER_ADDR=0.0.0.0:8080
 ENV RUST_LOG=info
-ENV SQLX_OFFLINE=true
+ENV SERVER_ADDR=0.0.0.0:8080
 
-# Expose port
+# Expose the port
 EXPOSE 8080
 
 # Run the application

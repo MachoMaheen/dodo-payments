@@ -1,6 +1,6 @@
-use crate::models::User;
-use crate::utils::{generate_jwt, hash_password, validate_jwt, verify_password};
-use chrono::{DateTime, Utc};
+use dodo_payments::models::User;
+use dodo_payments::utils::auth::{generate_jwt, hash_password, validate_jwt, verify_password};
+use chrono::Utc;
 use uuid::Uuid;
 
 #[cfg(test)]
@@ -40,7 +40,7 @@ mod tests {
         let user = create_test_user();
         let secret = "test_secret";
         
-        let token = generate_jwt(&user, secret).expect("Failed to generate JWT");
+        let token = generate_jwt(user.id, secret).expect("Failed to generate JWT");
         
         // Token should be a non-empty string
         assert!(!token.is_empty());

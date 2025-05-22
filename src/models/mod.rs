@@ -1,12 +1,10 @@
 pub mod user;
-pub mod transaction;
 pub mod transaction_fixed;
 pub mod account;
 pub mod error;
 
-// Re-exports
-pub use user::*;
-// We use the fixed version of transactions
-pub use transaction_fixed::*;
-pub use account::*;
+// Re-exports - explicit to avoid ambiguity
+pub use user::{User, UserResponse, LoginUserRequest, RegisterUserRequest, TokenResponse};
+pub use transaction_fixed::{Transaction, TransactionResponse, TransactionListResponse, TransactionStatus, CreateTransactionRequest};
+pub use account::{Account, AccountBalanceResponse};
 pub use error::*;

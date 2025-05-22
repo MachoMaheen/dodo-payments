@@ -5,9 +5,12 @@ use validator::Validate;
 use bigdecimal::BigDecimal;
 use std::str::FromStr;
 
-use crate::models::{
-    AppError, CreateTransactionRequest, Transaction, TransactionListResponse, TransactionResponse, TransactionStatus,
+use crate::models::transaction_fixed::{
+    Transaction, TransactionResponse, CreateTransactionRequest
 };
+use crate::models::transaction_fixed::TransactionStatus;
+use crate::models::transaction_fixed::TransactionListResponse;
+use crate::models::AppError;
 
 pub async fn create_transaction(
     user_id: web::ReqData<Uuid>,
@@ -36,9 +39,6 @@ pub async fn create_transaction(
         return Err(AppError::NotFoundError("Recipient not found".to_string()));
     }
     
-    // Begin transaction
-    let mut tx = pool.begin().await?;
-    
     // Convert f64 to BigDecimal
     let amount_decimal = BigDecimal::from_str(&transaction_data.amount.to_string())
         .map_err(|_| AppError::BadRequestError("Invalid amount".to_string()))?;
@@ -48,11 +48,10 @@ pub async fn create_transaction(
         r#"
         SELECT balance, currency FROM accounts
         WHERE user_id = $1
-        FOR UPDATE
         "#
     )
     .bind(sender_id)
-    .fetch_one(&mut *tx)
+    .fetch_one(pool.get_ref())
     .await?;
     
     let balance: BigDecimal = sender_account.try_get("balance")?;
@@ -84,7 +83,7 @@ pub async fn create_transaction(
     .bind(&amount_decimal)
     .bind(&transaction_data.currency)
     .bind(TransactionStatus::Pending as i32)
-    .fetch_one(&mut *tx)
+    .fetch_one(pool.get_ref())
     .await?
     .try_get::<Uuid, _>("id")?;
     
@@ -98,7 +97,7 @@ pub async fn create_transaction(
     )
     .bind(&amount_decimal)
     .bind(sender_id)
-    .execute(&mut *tx)
+    .execute(pool.get_ref())
     .await?;
     
     // Update recipient's balance
@@ -111,7 +110,7 @@ pub async fn create_transaction(
     )
     .bind(&amount_decimal)
     .bind(recipient_id)
-    .execute(&mut *tx)
+    .execute(pool.get_ref())
     .await?;
     
     // Mark transaction as completed
@@ -125,7 +124,7 @@ pub async fn create_transaction(
     )
     .bind(TransactionStatus::Completed as i32)
     .bind(transaction_id)
-    .fetch_one(&mut *tx)
+    .fetch_one(pool.get_ref())
     .await?;
 
     // Extract data from the row
@@ -139,9 +138,6 @@ pub async fn create_transaction(
         created_at: completed_transaction.try_get("created_at")?,
         updated_at: completed_transaction.try_get("updated_at")?,
     };
-    
-    // Commit transaction
-    tx.commit().await?;
     
     Ok(HttpResponse::Created().json(TransactionResponse::from(transaction)))
 }

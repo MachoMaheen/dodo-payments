@@ -1,5 +1,6 @@
 use std::env;
 use sqlx::postgres::{PgPool, PgPoolOptions};
+use std::time::Duration;
 use dotenv::dotenv;
 use log::info;
 
@@ -119,14 +120,15 @@ impl Config {
     }
 }
 
+
+
+// Function to set up the database pool
 pub async fn setup_database_pool(database_url: &str) -> PgPool {
-    info!("Setting up database connection pool");
-    
     PgPoolOptions::new()
         .max_connections(10)
+        .acquire_timeout(Duration::from_secs(5))
         .connect(database_url)
         .await
         .expect("Failed to create database connection pool")
 }
-
 pub mod db;
