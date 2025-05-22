@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     recipient_id UUID NOT NULL REFERENCES users(id),
     amount NUMERIC(19, 4) NOT NULL,
     currency VARCHAR(3) NOT NULL,
+    description TEXT DEFAULT '',
     status INTEGER NOT NULL DEFAULT 0, -- 0: pending, 1: completed, 2: failed
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

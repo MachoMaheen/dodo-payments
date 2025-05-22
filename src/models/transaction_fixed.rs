@@ -12,6 +12,7 @@ pub struct Transaction {
     pub recipient_id: Uuid,
     pub amount: BigDecimal,
     pub currency: String,
+    pub description: Option<String>,
     pub status: TransactionStatus,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
@@ -34,6 +35,9 @@ pub struct CreateTransactionRequest {
     
     #[validate(length(min = 3, max = 3, message = "currency must be a 3-letter code"))]
     pub currency: String,
+    
+    #[validate(length(max = 200, message = "description must be less than 200 characters"))]
+    pub description: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -43,6 +47,7 @@ pub struct TransactionResponse {
     pub recipient_id: Uuid,
     pub amount: f64,
     pub currency: String,
+    pub description: Option<String>,
     pub status: String,
     pub created_at: DateTime<Utc>,
 }
@@ -66,6 +71,7 @@ impl From<Transaction> for TransactionResponse {
             recipient_id: transaction.recipient_id,
             amount: amount_f64,
             currency: transaction.currency,
+            description: transaction.description,
             status: format!("{:?}", transaction.status).to_lowercase(),
             created_at: transaction.created_at,
         }

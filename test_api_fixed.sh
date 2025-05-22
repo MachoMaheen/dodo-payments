@@ -1,10 +1,9 @@
 #!/bin/bash
-# Enhanced test script for Dodo Payments API with reliable token handling
+# Enhanced test script for Dodo Payments API with funding + verification
 
-# Define server URL
 API_URL="http://localhost:8082"
 
-# Colors for better output
+# Color codes
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
@@ -13,35 +12,32 @@ NC='\033[0m'
 
 echo -e "${BLUE}=== Dodo Payments API Testing Suite ===${NC}"
 
-# Check if jq is installed
+# Check jq dependency
 if ! command -v jq &> /dev/null; then
     echo -e "${RED}Error: jq is not installed. Please install jq to run this script.${NC}"
     exit 1
 fi
 
-# Function to generate a unique test username
 generate_username() {
     echo "testuser_$(date +%s%N | md5sum | head -c 8)"
 }
 
-# Function to make request and handle response
 make_request() {
     local method=$1
     local endpoint=$2
     local data=$3
     local auth_header=$4
 
-    # Build the curl command
     if [ -n "$data" ]; then
         if [ -n "$auth_header" ]; then
             curl -s -X "$method" "${API_URL}${endpoint}" \
                 -H "Content-Type: application/json" \
                 -H "Authorization: $auth_header" \
-                -d "$data"
+                --data-raw "$data"
         else
             curl -s -X "$method" "${API_URL}${endpoint}" \
                 -H "Content-Type: application/json" \
-                -d "$data"
+                --data-raw "$data"
         fi
     else
         if [ -n "$auth_header" ]; then
@@ -55,102 +51,104 @@ make_request() {
     fi
 }
 
-# Test health endpoint
+# Step 1: Health check
 echo -e "${BLUE}Step 1: Testing health endpoint${NC}"
 health_response=$(make_request "GET" "/health" "" "")
 echo -e "${YELLOW}Response:${NC}"
 echo "$health_response" | jq .
 echo ""
 
-# Register a new user with unique username
-USERNAME=$(generate_username)
-EMAIL="${USERNAME}@example.com"
+# Step 2: Register sender
+SENDER_USERNAME=$(generate_username)
+SENDER_EMAIL="${SENDER_USERNAME}@example.com"
 PASSWORD="password123"
-
-echo -e "${BLUE}Step 2: Registering a new user (${USERNAME})${NC}"
-register_data="{\"username\":\"${USERNAME}\",\"email\":\"${EMAIL}\",\"password\":\"${PASSWORD}\"}"
+echo -e "${BLUE}Step 2: Registering sender (${SENDER_USERNAME})${NC}"
+register_data="{\"username\":\"${SENDER_USERNAME}\",\"email\":\"${SENDER_EMAIL}\",\"password\":\"${PASSWORD}\"}"
 register_response=$(make_request "POST" "/api/users/register" "$register_data" "")
-echo -e "${YELLOW}Response:${NC}"
 echo "$register_response" | jq .
+SENDER_ID=$(echo "$register_response" | jq -r '.id')
 echo ""
 
-# Login user to get JWT token
-echo -e "${BLUE}Step 3: Logging in to get JWT token${NC}"
-login_data="{\"username\":\"${USERNAME}\",\"password\":\"${PASSWORD}\"}"
+# Step 3: Login sender
+echo -e "${BLUE}Step 3: Logging in sender${NC}"
+login_data="{\"username\":\"${SENDER_USERNAME}\",\"password\":\"${PASSWORD}\"}"
 login_response=$(make_request "POST" "/api/users/login" "$login_data" "")
-echo -e "${YELLOW}Raw login response:${NC}"
-echo "$login_response"
+SENDER_TOKEN=$(echo "$login_response" | jq -r '.token')
+echo -e "${GREEN}Token: ${SENDER_TOKEN:0:20}...${NC}"
 echo ""
 
-# Save response to file for better token extraction
-echo "$login_response" > login_response.tmp
-
-# Extract token using grep to avoid line break issues
-token=$(grep -o '"token":"[^"]*' login_response.tmp | sed 's/"token":"//' | tr -d '\n' | tr -d ' ')
-if [ -z "$token" ]; then
-    echo -e "${RED}Failed to extract token from response${NC}"
-    exit 1
-else
-    echo -e "${GREEN}Successfully extracted JWT token: ${token:0:20}...${NC}"
-    echo ""
-fi
-
-# Test user profile endpoint
-echo -e "${BLUE}Step 4: Getting user profile${NC}"
-profile_response=$(make_request "GET" "/api/users/profile" "" "Bearer $token")
-echo -e "${YELLOW}Response:${NC}"
+# Step 4: Get sender profile
+echo -e "${BLUE}Step 4: Fetching sender profile${NC}"
+profile_response=$(make_request "GET" "/api/users/profile" "" "Bearer $SENDER_TOKEN")
 echo "$profile_response" | jq .
 echo ""
 
-# Test account balance endpoint
-echo -e "${BLUE}Step 5: Getting account balance${NC}"
-balance_response=$(make_request "GET" "/api/accounts/balance" "" "Bearer $token")
-echo -e "${YELLOW}Response:${NC}"
-echo "$balance_response" | jq .
+# Step 5: Get sender balance
+echo -e "${BLUE}Step 5: Checking sender balance before funding${NC}"
+sender_balance_before=$(make_request "GET" "/api/accounts/balance" "" "Bearer $SENDER_TOKEN")
+echo "$sender_balance_before" | jq .
 echo ""
 
-# Register a recipient user
+# Step 5.1: Auto-fund sender
+echo -e "${BLUE}Step 5.1: Funding sender via /admin/fund/${SENDER_ID}${NC}"
+fund_data="{\"amount\":100.0}"
+fund_response=$(make_request "POST" "/admin/fund/${SENDER_ID}" "$fund_data" "")
+echo "$fund_response" | jq .
+echo ""
+
+# Step 5.2: Check updated sender balance
+echo -e "${BLUE}Step 5.2: Verifying sender balance after funding${NC}"
+sender_balance_after=$(make_request "GET" "/api/accounts/balance" "" "Bearer $SENDER_TOKEN")
+echo "$sender_balance_after" | jq .
+echo ""
+
+# Step 6: Register recipient
 RECIPIENT_USERNAME=$(generate_username)
 RECIPIENT_EMAIL="${RECIPIENT_USERNAME}@example.com"
-
-echo -e "${BLUE}Step 6: Registering a recipient user (${RECIPIENT_USERNAME})${NC}"
+echo -e "${BLUE}Step 6: Registering recipient (${RECIPIENT_USERNAME})${NC}"
 recipient_data="{\"username\":\"${RECIPIENT_USERNAME}\",\"email\":\"${RECIPIENT_EMAIL}\",\"password\":\"${PASSWORD}\"}"
 recipient_response=$(make_request "POST" "/api/users/register" "$recipient_data" "")
-echo -e "${YELLOW}Response:${NC}"
 echo "$recipient_response" | jq .
+RECIPIENT_ID=$(echo "$recipient_response" | jq -r '.id')
 echo ""
 
-# Create a transaction
-echo -e "${BLUE}Step 7: Creating a transaction${NC}"
-transaction_data="{\"recipient_username\":\"${RECIPIENT_USERNAME}\",\"amount\":\"10.00\",\"description\":\"Test payment\"}"
-transaction_response=$(make_request "POST" "/api/transactions" "$transaction_data" "Bearer $token")
-echo -e "${YELLOW}Response:${NC}"
+# Step 7: Login recipient
+echo -e "${BLUE}Step 7: Logging in recipient${NC}"
+recipient_login_data="{\"username\":\"${RECIPIENT_USERNAME}\",\"password\":\"${PASSWORD}\"}"
+recipient_login_response=$(make_request "POST" "/api/users/login" "$recipient_login_data" "")
+RECIPIENT_TOKEN=$(echo "$recipient_login_response" | jq -r '.token')
+echo -e "${GREEN}Token: ${RECIPIENT_TOKEN:0:20}...${NC}"
+echo ""
+
+# Step 7.1: Check recipient balance before transfer
+echo -e "${BLUE}Step 7.1: Checking recipient balance before transfer${NC}"
+recipient_balance_before=$(make_request "GET" "/api/accounts/balance" "" "Bearer $RECIPIENT_TOKEN")
+balance_before=$(echo "$recipient_balance_before" | jq -r '.balance')
+echo "$recipient_balance_before" | jq .
+echo ""
+
+# Step 8: Create transaction
+echo -e "${BLUE}Step 8: Creating transaction to recipient${NC}"
+transaction_data="{\"recipient_id\":\"$RECIPIENT_ID\",\"amount\":10.0,\"currency\":\"USD\",\"description\":\"Test payment\"}"
+echo -e "${YELLOW}Transaction Payload:${NC}"
+echo "$transaction_data"
+
+transaction_response=$(make_request "POST" "/api/transactions" "$transaction_data" "Bearer $SENDER_TOKEN")
 echo "$transaction_response" | jq .
 echo ""
 
-# Extract transaction ID
-transaction_id=$(echo "$transaction_response" | jq -r '.id // empty')
-if [ -n "$transaction_id" ]; then
-    echo -e "${GREEN}Transaction created with ID: $transaction_id${NC}"
-    
-    # Get transaction details
-    echo -e "${BLUE}Step 8: Getting transaction details${NC}"
-    tx_details=$(make_request "GET" "/api/transactions/$transaction_id" "" "Bearer $token")
-    echo -e "${YELLOW}Response:${NC}"
-    echo "$tx_details" | jq .
-    echo ""
-    
-    # List all transactions
-    echo -e "${BLUE}Step 9: Listing all transactions${NC}"
-    all_tx=$(make_request "GET" "/api/transactions" "" "Bearer $token")
-    echo -e "${YELLOW}Response:${NC}"
-    echo "$all_tx" | jq .
-    echo ""
+# Step 9: Confirm recipient balance increased
+echo -e "${BLUE}Step 9: Checking recipient balance after transaction${NC}"
+recipient_balance_after=$(make_request "GET" "/api/accounts/balance" "" "Bearer $RECIPIENT_TOKEN")
+balance_after=$(echo "$recipient_balance_after" | jq -r '.balance')
+echo "$recipient_balance_after" | jq .
+
+expected_balance=$(awk "BEGIN {print $balance_before + 10.00}")
+if (( $(awk "BEGIN {print ($balance_after == $expected_balance)}") )); then
+    echo -e "${GREEN}✅ Recipient balance correctly increased by 10.00 USD${NC}"
 else
-    echo -e "${RED}Could not extract transaction ID from response${NC}"
+    echo -e "${RED}❌ Balance mismatch. Expected: $expected_balance, Got: $balance_after${NC}"
 fi
 
-# Clean up temporary files
-rm -f login_response.tmp
-
-echo -e "${GREEN}API testing completed!${NC}"
+echo ""
+echo -e "${GREEN}🎉 API testing completed!${NC}"

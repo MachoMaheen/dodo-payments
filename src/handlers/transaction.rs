@@ -69,12 +69,11 @@ pub async fn create_transaction(
             currency, transaction_data.currency
         )));
     }
-    
-    // Create transaction record
+      // Create transaction record
     let transaction_id = sqlx::query(
         r#"
-        INSERT INTO transactions (sender_id, recipient_id, amount, currency, status)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO transactions (sender_id, recipient_id, amount, currency, description, status)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
         "#
     )
@@ -82,6 +81,7 @@ pub async fn create_transaction(
     .bind(recipient_id)
     .bind(&amount_decimal)
     .bind(&transaction_data.currency)
+    .bind(&transaction_data.description)
     .bind(TransactionStatus::Pending as i32)
     .fetch_one(pool.get_ref())
     .await?
@@ -112,28 +112,26 @@ pub async fn create_transaction(
     .bind(recipient_id)
     .execute(pool.get_ref())
     .await?;
-    
-    // Mark transaction as completed
+      // Mark transaction as completed
     let completed_transaction = sqlx::query(
         r#"
         UPDATE transactions
         SET status = $1, updated_at = NOW()
         WHERE id = $2
-        RETURNING id, sender_id, recipient_id, amount, currency, status, created_at, updated_at
+        RETURNING id, sender_id, recipient_id, amount, currency, description, status, created_at, updated_at
         "#
     )
     .bind(TransactionStatus::Completed as i32)
     .bind(transaction_id)
     .fetch_one(pool.get_ref())
-    .await?;
-
-    // Extract data from the row
+    .await?;    // Extract data from the row
     let transaction = Transaction {
         id: completed_transaction.try_get("id")?,
         sender_id: completed_transaction.try_get("sender_id")?,
         recipient_id: completed_transaction.try_get("recipient_id")?,
         amount: completed_transaction.try_get("amount")?,
         currency: completed_transaction.try_get("currency")?,
+        description: completed_transaction.try_get("description").ok(),
         status: TransactionStatus::Completed, // We know it's completed because we just set it
         created_at: completed_transaction.try_get("created_at")?,
         updated_at: completed_transaction.try_get("updated_at")?,
@@ -149,10 +147,9 @@ pub async fn get_transaction(
 ) -> Result<impl Responder, AppError> {
     let user_id = user_id.into_inner();
     let transaction_id = transaction_id.into_inner();
-    
-    let row = sqlx::query(
+      let row = sqlx::query(
         r#"
-        SELECT id, sender_id, recipient_id, amount, currency, status, created_at, updated_at
+        SELECT id, sender_id, recipient_id, amount, currency, description, status, created_at, updated_at
         FROM transactions
         WHERE id = $1 AND (sender_id = $2 OR recipient_id = $2)
         "#
@@ -162,13 +159,13 @@ pub async fn get_transaction(
     .fetch_optional(pool.get_ref())
     .await?
     .ok_or_else(|| AppError::NotFoundError("Transaction not found".to_string()))?;
-    
-    let transaction = Transaction {
+      let transaction = Transaction {
         id: row.try_get("id")?,
         sender_id: row.try_get("sender_id")?,
         recipient_id: row.try_get("recipient_id")?,
         amount: row.try_get("amount")?,
         currency: row.try_get("currency")?,
+        description: row.try_get("description").ok(),
         status: match row.try_get::<i32, _>("status")? {
             0 => TransactionStatus::Pending,
             1 => TransactionStatus::Completed,
@@ -190,10 +187,9 @@ pub async fn list_transactions(
     let user_id = user_id.into_inner();
     let limit = query.limit.unwrap_or(10);
     let offset = query.offset.unwrap_or(0);
-    
-    let mut sql = String::from(
+      let mut sql = String::from(
         r#"
-        SELECT id, sender_id, recipient_id, amount, currency, status, created_at, updated_at
+        SELECT id, sender_id, recipient_id, amount, currency, description, status, created_at, updated_at
         FROM transactions
         WHERE (sender_id = $1 OR recipient_id = $1)
         "#
@@ -232,13 +228,13 @@ pub async fn list_transactions(
     
     // Map rows to Transaction objects
     let mut transactions = Vec::with_capacity(rows.len());
-    for row in rows {
-        let transaction = Transaction {
+    for row in rows {        let transaction = Transaction {
             id: row.try_get("id")?,
             sender_id: row.try_get("sender_id")?,
             recipient_id: row.try_get("recipient_id")?,
             amount: row.try_get("amount")?,
             currency: row.try_get("currency")?,
+            description: row.try_get("description").ok(),
             status: match row.try_get::<i32, _>("status")? {
                 0 => TransactionStatus::Pending,
                 1 => TransactionStatus::Completed,

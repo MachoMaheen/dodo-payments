@@ -2,6 +2,7 @@ pub mod user;
 pub mod account;
 pub mod transaction;
 pub mod health;
+pub mod admin;
 
 use actix_web::web;
 use crate::middleware::Auth;
@@ -17,10 +18,8 @@ pub fn config_routes(cfg: &mut web::ServiceConfig) {
             // User routes
             .service(
                 web::scope("/users")
-                    // Public routes
                     .route("/register", web::post().to(user::register))
                     .route("/login", web::post().to(user::login))
-                    // Protected routes
                     .service(
                         web::scope("/profile")
                             .wrap(Auth)
@@ -28,13 +27,13 @@ pub fn config_routes(cfg: &mut web::ServiceConfig) {
                             .route("", web::patch().to(user::update_profile))
                     )
             )
-            // Account routes - all protected
+            // Account routes
             .service(
                 web::scope("/accounts")
                     .wrap(Auth)
                     .route("/balance", web::get().to(account::get_balance))
             )
-            // Transaction routes - all protected
+            // Transaction routes
             .service(
                 web::scope("/transactions")
                     .wrap(Auth)
@@ -42,5 +41,11 @@ pub fn config_routes(cfg: &mut web::ServiceConfig) {
                     .route("", web::get().to(transaction::list_transactions))
                     .route("/{transaction_id}", web::get().to(transaction::get_transaction))
             )
+    );
+
+    // Admin routes
+    cfg.service(
+        web::scope("/admin")
+            .route("/fund/{user_id}", web::post().to(admin::fund_user_balance))
     );
 }
